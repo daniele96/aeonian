@@ -1,14 +1,19 @@
 <?php
-require_once("../../config.php"); 
-require("../../classes/SystemsManager.php");
+require_once '../../config.php' ; 
+require '../../classes/SystemsManager.php' ;
+
 
 session_start();
 
-if(!isset($_SESSION['is_logged_in'])) {
+
+
+if(!isset($_SESSION['is_logged_in'] ==1)) {
   header('Location: '.ROOT_URL.'/template/login.php');
 }
 
-if(isset($_SESSION['user_data']) && $_SESSION['user_data']['ruolo']!=3) {
+define("RUOLO", 3);
+
+if(isset($_SESSION['user_data'])==1 && $_SESSION['user_data']['ruolo']!=RUOLO) {
     header('Location: '.ROOT_URL.'/index.php');
 }
 
@@ -17,20 +22,23 @@ $systemsManager = new SystemsManager();
 $impianti = $systemsManager->getImpianti();
 
 
-if(isset($_POST['action'])) {
+if(isset($_POST['action']) ==1) {
     $action = $_POST['action'];
     $var = $_POST['id'];
     switch($action) {
       case 'delete':
         $systemsManager->eliminaImpianto($var);
         break;
+
+      default: 
+        trigger_error("Azione non valida",E_USER_ERROR);
     }
 }
 
 ?>
 
  <!-- START HEADER -->
- <?php require("./includes/header.php"); ?>
+ <?php require './includes/header.php'; ?>
  
     <!-- END HEADER -->
 
@@ -42,7 +50,7 @@ if(isset($_POST['action'])) {
     <div class="wrapper">
 
     <!-- START LEFT SIDEBAR NAV-->
-        <?php require("./includes/sidebar.php"); ?>
+        <?php require './includes/sidebar.php' ; ?>
     <!-- END LEFT SIDEBAR NAV-->
 
 
@@ -119,11 +127,11 @@ if(isset($_POST['action'])) {
                             <?php
                             $index=0;
                              foreach ($responsabili as $resp):
-                              if($index==0)
-                                 echo $resp['Nome']." ".$resp['Cognome'];
+                              if($index === 0)
+                                 echo $resp['Nome'],' ',$resp['Cognome'];
 
                               else  
-                                 echo ", ".$resp['Nome']." ".$resp['Cognome'];
+                                 echo ', ',$resp['Nome'],' ',$resp['Cognome'];
 
                              $index++;
                              endforeach;
@@ -162,6 +170,6 @@ if(isset($_POST['action'])) {
   <!-- //////////////////////////////////////////////////////////////////////////// -->
 
   <!-- START FOOTER -->
-  <?php require("./includes/footer.php"); ?>
+  <?php require './includes/footer.php' ; ?>
       
       
