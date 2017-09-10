@@ -1,20 +1,15 @@
 <?php
-require_once("../../config.php"); 
-require("../../classes/SensorsManager.php");
-require("../../classes/EnvironmentsManager.php");
-
-
+require_once "../../config.php"; 
+require "../../classes/SensorsManager.php";
+require "../../classes/EnvironmentsManager.php";
 session_start();
-
 //se la sessione non è presente, allora effettua il login
 if(!isset($_SESSION['is_logged_in'])) {
   header('Location: '.ROOT_URL.'/template/login.php');
 }
-
 if(isset($_SESSION['user_data']) && $_SESSION['user_data']['ruolo']!=3) {
     header('Location: '.ROOT_URL.'/index.php');
 }
-
 //Gestore sensori
 $sensorsManager = new SensorsManager();
 //Gestore ambienti
@@ -22,17 +17,20 @@ $environmentsManager = new EnvironmentsManager();
 //Mi serve l'id dell'impianto per poter tornare ai dettagli impianto tramite breadcrumbs
 $ambiente = $environmentsManager->trovaAmbiente($_GET['id']);
 $tipi = $sensorsManager->getTipi();
-
 //quando ricevo un POST sulla pagina
 if(isset($_POST['submit'])){
   $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
   $checkValue = $sensorsManager->registraSensore($post, $_GET['id']);
-
   if($checkValue['error']==1){
     $_SESSION['message'] = 'Ci sono dei campi che non sono stati compilati.';
     $_SESSION['values'] = $checkValue['values'];
-    header('Location: create-sensor.php?id='.$_GET['id']);
+    $string1 = 'Location: create-sensor.php?id=',$_GET['id'];
+    if(!string.IsNullOrEmpty($string1) && Url.IsLocalUrl($string1)){
+    header($string1);
     exit;
+    }
+    
+    
   }
   if($checkValue['error']==2){
     $_SESSION['message'] = "L'identificativo del sensore può contenere solo cifre/lettere maiuscole ed ha una lunghezza fissa di 10 caratteri.";
@@ -50,11 +48,10 @@ if(isset($_POST['submit'])){
     header("Location: environment-details.php?id=".$_GET['id']);
   }
 }
-
 ?>
 
 <!-- START HEADER -->
-<?php require("./includes/header.php"); ?>
+<?php require "./includes/header.php"; ?>
     <!-- END HEADER -->
 
   <!-- //////////////////////////////////////////////////////////////////////////// -->
@@ -65,7 +62,7 @@ if(isset($_POST['submit'])){
     <div class="wrapper">
 
     <!-- START LEFT SIDEBAR NAV-->
-        <?php require("./includes/sidebar.php"); ?>
+        <?php require "./includes/sidebar.php"; ?>
     <!-- END LEFT SIDEBAR NAV-->
 
 
@@ -167,7 +164,6 @@ if(isset($_POST['submit'])){
                                       <tr>
                                           <td>
                                           <?php
-
                                             echo '<input type="radio" id="radio_btn'.$index.'" value="'.$tipo['IDTipologiaSensore'].'" name = "tipo">';
                                             echo '<label style="color:black" for="radio_btn'.$index.'">'.$tipo['Nome'].'</label>';
                                           ?>
@@ -193,7 +189,7 @@ if(isset($_POST['submit'])){
                                 <?php
                                   if (isset($_SESSION['message']))
                                   {
-                                      echo "<p class='red-text text-darken-2'>".$_SESSION['message']."</p>";
+                                      echo htmlspecialchars("<p class='red-text text-darken-2'>".$_SESSION['message']."</p>", ENT_QUOTES);
                                       unset($_SESSION['message']);
                                       unset($_SESSION['values']);
                                   }
@@ -233,7 +229,7 @@ if(isset($_POST['submit'])){
   <!-- //////////////////////////////////////////////////////////////////////////// -->
 
   <!-- START FOOTER -->
-  <?php require("./includes/footer.php"); ?>
+  <?php require "./includes/footer.php"; ?>
       
       
     
