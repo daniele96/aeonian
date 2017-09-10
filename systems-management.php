@@ -7,13 +7,13 @@ session_start();
 
 
 
-if(!isset($_SESSION['is_logged_in'] ==1)) {
+if(!isset($_SESSION['is_logged_in'] === 1)) {
   header('Location: '.ROOT_URL.'/template/login.php');
 }
 
-define("RUOLO", 3);
 
-if(isset($_SESSION['user_data'])==1 && $_SESSION['user_data']['ruolo']!=RUOLO) {
+
+if(isset($_SESSION['user_data'])===1 && $_SESSION['user_data']['ruolo']!=RUOLO) {
     header('Location: '.ROOT_URL.'/index.php');
 }
 
@@ -22,7 +22,7 @@ $systemsManager = new SystemsManager();
 $impianti = $systemsManager->getImpianti();
 
 
-if(isset($_POST['action']) ==1) {
+if(isset($_POST['action']) ===1) {
     $action = $_POST['action'];
     $var = $_POST['id'];
     switch($action) {
@@ -31,7 +31,7 @@ if(isset($_POST['action']) ==1) {
         break;
 
       default: 
-        trigger_error("Azione non valida",E_USER_ERROR);
+        trigger_error('Azione non valida',E_USER_ERROR);
     }
 }
 
